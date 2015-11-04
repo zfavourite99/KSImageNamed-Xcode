@@ -32,8 +32,8 @@
     if ( (self = [super init]) ) {
         [self setFileURL:fileURL];
         [self setInAssetCatalog:YES];
-        
-        _imageIncludeExtension = NO;
+
+        _imageIncludeExtension = YES;
     }
     return self;
 }
@@ -113,15 +113,18 @@
 
 - (NSString *)displayText
 {
-    NSString *displayFormat = @"%@ (%@)";
+    NSString *displayFormat = @"%@ (%@";
     
-    if (self.has1x && self.has2x) {
-        displayFormat = @"%@ (%@, 1x and 2x)";
-    } else if (self.has1x) {
-        displayFormat = @"%@ (%@, 1x only)";
-    } else if (self.has2x) {
-        displayFormat = @"%@ (%@, 2x only)";
+    if (self.itemType & KSImageNamedIndexCompletionItemType1x) {
+        displayFormat = [displayFormat stringByAppendingString:@", 1x"];
     }
+    if (self.itemType & KSImageNamedIndexCompletionItemType2x) {
+        displayFormat = [displayFormat stringByAppendingString:@", 2x"];
+    }
+    if (self.itemType & KSImageNamedIndexCompletionItemType3x) {
+        displayFormat = [displayFormat stringByAppendingString:@", 3x"];
+    }
+    displayFormat = [displayFormat stringByAppendingString:@")"];
     
     return [NSString stringWithFormat:displayFormat, [self _imageNamedText], [[self fileURL] pathExtension]];
 }
@@ -131,7 +134,7 @@
     NSString *fileName = [[self fileURL] lastPathComponent];
     NSString *imageName = [fileName stringByDeletingPathExtension];
 
-    if ([imageName hasSuffix:@"@2x"]) {
+    if ([imageName hasSuffix:@"@2x"] || [imageName hasSuffix:@"@3x"]) {
         fileName = [[imageName substringToIndex:[imageName length] - 3] stringByAppendingFormat:@".%@", [fileName pathExtension]];
     } else if ([imageName hasSuffix:@"@2x~ipad"]) {
         //2x iPad images need to be handled separately since (image~ipad and image@2x~ipad are valid pairs)

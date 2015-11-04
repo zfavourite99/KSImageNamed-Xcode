@@ -227,14 +227,22 @@ NSString * const KSShowExtensionInImageCompletionDefaultKey = @"KSShowExtensionI
                 NSString *normalFileName;
                 BOOL skip = NO;
                 BOOL is2x = NO;
+                BOOL is3x = NO;
                 
                 if ([imageName hasSuffix:@"@2x"]) {
                     normalFileName = [[imageName substringToIndex:[imageName length] - 3] stringByAppendingFormat:@".%@", [fileName pathExtension]];
                     is2x = YES;
+                } else if ([imageName hasSuffix:@"@3x"]) {
+                    normalFileName = [[imageName substringToIndex:[imageName length] - 3] stringByAppendingFormat:@".%@", [fileName pathExtension]];
+                    is3x = YES;
                 } else if ([imageName hasSuffix:@"@2x~ipad"]) {
                     //2x iPad images need to be handled separately since (image~ipad and image@2x~ipad are valid pairs)
                     normalFileName = [[[imageName substringToIndex:[imageName length] - 8] stringByAppendingString:@"~ipad"] stringByAppendingFormat:@".%@", [fileName pathExtension]];
                     is2x = YES;
+                } else if ([imageName hasSuffix:@"@3x~ipad"]) {
+                    //2x iPad images need to be handled separately since (image~ipad and image@2x~ipad are valid pairs)
+                    normalFileName = [[[imageName substringToIndex:[imageName length] - 8] stringByAppendingString:@"~ipad"] stringByAppendingFormat:@".%@", [fileName pathExtension]];
+                    is3x = YES;
                 } else {
                     normalFileName = fileName;
                 }
@@ -243,17 +251,21 @@ NSString * const KSShowExtensionInImageCompletionDefaultKey = @"KSShowExtensionI
                 
                 if (existingCompletionItem) {
                     if (is2x) {
-                        existingCompletionItem.has2x = YES;
+                        existingCompletionItem.itemType |= KSImageNamedIndexCompletionItemType2x;
+                    } else if (is3x) {
+                        existingCompletionItem.itemType |= KSImageNamedIndexCompletionItemType3x;
                     } else {
-                        existingCompletionItem.has1x = YES;
+                        existingCompletionItem.itemType |= KSImageNamedIndexCompletionItemType1x;
                     }
                     skip = YES;
                 }
-                
                 if (!skip && [[nextResult fileDataTypePresumed] conformsToAnyIdentifierInSet:imageTypes]) {
                     KSImageNamedIndexCompletionItem *imageCompletion = [[KSImageNamedIndexCompletionItem alloc] initWithFileURL:[nextResult fileReferenceURL] includeExtension:includeExtension];
-                    imageCompletion.has2x = is2x;
-                    imageCompletion.has1x = !is2x;
+                    if (is2x) {
+                        imageCompletion.itemType |= KSImageNamedIndexCompletionItemType2x;
+                    } else {
+                        imageCompletion.itemType |= KSImageNamedIndexCompletionItemType1x;
+                    }
                     [completionItems addObject:imageCompletion];
                     [imageCompletionItems setObject:imageCompletion forKey:fileName];
                 }
@@ -265,6 +277,7 @@ NSString * const KSShowExtensionInImageCompletionDefaultKey = @"KSShowExtensionI
         //Need to sort completionItems by fileName to ensure autocompletion in asset catalogs is handled correctly
         //Autocomplete doesn't work correctly if the completion items aren't in alphabetical order
         [completionItems sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"fileName" ascending:YES selector:@selector(caseInsensitiveCompare:)]]];
+        
     }
     
     return completionItems;

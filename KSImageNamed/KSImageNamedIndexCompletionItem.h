@@ -100,13 +100,18 @@
 
 @end
 
+typedef NS_ENUM (NSInteger, KSImageNamedIndexCompletionItemType) {
+    KSImageNamedIndexCompletionItemType1x = 1 << 0,
+    KSImageNamedIndexCompletionItemType2x = 1 << 1,
+    KSImageNamedIndexCompletionItemType3x = 1 << 2
+};
+
 @interface KSImageNamedIndexCompletionItem : IDEIndexCompletionItem
 
 @property(nonatomic, strong) NSURL *fileURL;
 @property(nonatomic, strong, readonly) NSURL *imageFileURL; //derived from fileURL
 @property(nonatomic, strong, readonly) NSString *fileName;
-@property(nonatomic, assign) BOOL has1x;
-@property(nonatomic, assign) BOOL has2x;
+@property(nonatomic, assign) KSImageNamedIndexCompletionItemType itemType;
 @property(nonatomic, assign) BOOL forSwift;
 @property(nonatomic, assign, getter=isInAssetCatalog, readonly) BOOL inAssetCatalog;
 
