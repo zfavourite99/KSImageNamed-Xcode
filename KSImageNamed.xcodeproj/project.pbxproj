@@ -314,7 +314,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KSImageNamed/KSImageNamed-Prefix.pch";
 				INFOPLIST_FILE = "KSImageNamed/KSImageNamed-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Developer/Xcode/Plug-ins";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Application Support/Developer/Shared/Xcode/Plug-ins";
 				PRODUCT_NAME = KSImageNamed;
 				WRAPPER_EXTENSION = ideplugin;
 			};
@@ -333,7 +333,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KSImageNamed/KSImageNamed-Prefix.pch";
 				INFOPLIST_FILE = "KSImageNamed/KSImageNamed-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Developer/Xcode/Plug-ins";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Application Support/Developer/Shared/Xcode/Plug-ins";
 				PRODUCT_NAME = KSImageNamed;
 				WRAPPER_EXTENSION = ideplugin;
 			};
